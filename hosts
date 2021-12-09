@@ -1,0 +1,18 @@
+[zabbix_monitor]
+test ansible_ssh_host=255.255.255.255 ansible_ssh_user=root zabbix_interface_ip=255.255.255.255
+
+[zabbix_monitor:vars]
+zabbix_agent2=true
+zabbix_agent_server=your.domain
+zabbix_url="https://your.domain"
+zabbix_api_use=true # We will work with api
+zabbix_api_user=your_admin
+zabbix_api_pass=your_admin_pass
+zabbix_interface_port="10050"
+zabbix_host_groups=["Linux servers"] # default group
+zabbix_link_templates=["Linux by Zabbix agent"] # default template
+zabbix_interface_type=agent 
+zabbix_interface_use_ip="1"
+zabbix_interface_ip=""
+zabbix_host_description="your_description"
+zabbix_host_status=enabled

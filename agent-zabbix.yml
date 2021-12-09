@@ -1,0 +1,35 @@
+- hosts: zabbix_monitor
+  tasks:
+    - name: Install agent
+      include_role:
+        name:  community.zabbix.zabbix_agent # installs a role on hosts
+      tags:
+        - install
+
+- hosts: localhost # Accessing the api from the local host
+  tasks:
+    - name: Create a new host or update an existing host's
+      local_action:
+        module: community.zabbix.zabbix_host
+        server_url: "https://your.domain"
+        login_user: "your_admin"
+        login_password: "your_admin_pass"
+        host_name: "{{ item }}"
+        visible_name: "{{ hostvars[item].zabbix_visible_name | default(item) }}"
+        description: "{{ hostvars[item].zabbix_host_description | default('') }} OS: {{  hostvars[item].ansible_distribution | default('') }} {{  hostvars[item].ansible_distribution_version | default('') }}"
+        host_groups: "{{ hostvars[item].zabbix_host_groups }}" 
+        link_templates: "{{ hostvars[item].zabbix_link_templates }}"
+        status: "{{ hostvars[item].zabbix_host_status }}" 
+        state: present 
+        inventory_mode: disabled 
+        interfaces: 
+          - type: "{{ hostvars[item].zabbix_interface_type }}"
+            main: 1 
+            useip: "{{ hostvars[item].zabbix_interface_use_ip }}"
+            ip: "{{ hostvars[item].zabbix_interface_ip }}"
+            dns: "{{ item }}"
+            port: "{{ hostvars[item].zabbix_interface_port }}"
+      with_items:
+        - "{{ groups['zabbix_monitor'] if groups['zabbix_monitor'] is defined else [] }}"
+      tags:
+        - add-host 

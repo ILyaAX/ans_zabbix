@@ -1,0 +1,3 @@
+ansible-playbook -i hosts agent-zabbix.yml                ### all
+ansible-playbook -i hosts -t install agent-zabbix.yml     ### only install agent
+ansible-playbook -i hosts -t add-host agent-zabbix.yml    ### only add-host
